@@ -9,19 +9,29 @@
 /* Begin PBXBuildFile section */
 		48A2C46C287350FD0066E14D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C46B287350FD0066E14D /* AppDelegate.swift */; };
 		48A2C46E287350FD0066E14D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C46D287350FD0066E14D /* SceneDelegate.swift */; };
-		48A2C470287350FD0066E14D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C46F287350FD0066E14D /* ViewController.swift */; };
+		48A2C470287350FD0066E14D /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C46F287350FD0066E14D /* AuthViewController.swift */; };
 		48A2C475287350FE0066E14D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48A2C474287350FE0066E14D /* Assets.xcassets */; };
 		48A2C478287350FE0066E14D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48A2C476287350FE0066E14D /* LaunchScreen.storyboard */; };
+		48A2C480287362B90066E14D /* UIButton + Extansion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C47F287362B90066E14D /* UIButton + Extansion.swift */; };
+		48A2C482287366EC0066E14D /* UIFont + Extansion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C481287366EC0066E14D /* UIFont + Extansion.swift */; };
+		48A2C4862873687F0066E14D /* UIColor + Extansion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C4852873687F0066E14D /* UIColor + Extansion.swift */; };
+		48A2C48828736FE10066E14D /* UILabel + Extansion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C48728736FE10066E14D /* UILabel + Extansion.swift */; };
+		48A2C48A287372020066E14D /* UIImageView + Extansion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C489287372020066E14D /* UIImageView + Extansion.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		48A2C468287350FD0066E14D /* iChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48A2C46B287350FD0066E14D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		48A2C46D287350FD0066E14D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		48A2C46F287350FD0066E14D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		48A2C46F287350FD0066E14D /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		48A2C474287350FE0066E14D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		48A2C477287350FE0066E14D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		48A2C479287350FE0066E14D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		48A2C47F287362B90066E14D /* UIButton + Extansion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton + Extansion.swift"; sourceTree = "<group>"; };
+		48A2C481287366EC0066E14D /* UIFont + Extansion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont + Extansion.swift"; sourceTree = "<group>"; };
+		48A2C4852873687F0066E14D /* UIColor + Extansion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor + Extansion.swift"; sourceTree = "<group>"; };
+		48A2C48728736FE10066E14D /* UILabel + Extansion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel + Extansion.swift"; sourceTree = "<group>"; };
+		48A2C489287372020066E14D /* UIImageView + Extansion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView + Extansion.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +64,27 @@
 		48A2C46A287350FD0066E14D /* iChat */ = {
 			isa = PBXGroup;
 			children = (
+				48A2C4832873671D0066E14D /* Extansion */,
 				48A2C46B287350FD0066E14D /* AppDelegate.swift */,
 				48A2C46D287350FD0066E14D /* SceneDelegate.swift */,
-				48A2C46F287350FD0066E14D /* ViewController.swift */,
+				48A2C46F287350FD0066E14D /* AuthViewController.swift */,
 				48A2C474287350FE0066E14D /* Assets.xcassets */,
 				48A2C476287350FE0066E14D /* LaunchScreen.storyboard */,
 				48A2C479287350FE0066E14D /* Info.plist */,
 			);
 			path = iChat;
+			sourceTree = "<group>";
+		};
+		48A2C4832873671D0066E14D /* Extansion */ = {
+			isa = PBXGroup;
+			children = (
+				48A2C47F287362B90066E14D /* UIButton + Extansion.swift */,
+				48A2C481287366EC0066E14D /* UIFont + Extansion.swift */,
+				48A2C4852873687F0066E14D /* UIColor + Extansion.swift */,
+				48A2C48728736FE10066E14D /* UILabel + Extansion.swift */,
+				48A2C489287372020066E14D /* UIImageView + Extansion.swift */,
+			);
+			path = Extansion;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -134,9 +157,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48A2C470287350FD0066E14D /* ViewController.swift in Sources */,
+				48A2C48A287372020066E14D /* UIImageView + Extansion.swift in Sources */,
+				48A2C470287350FD0066E14D /* AuthViewController.swift in Sources */,
 				48A2C46C287350FD0066E14D /* AppDelegate.swift in Sources */,
+				48A2C482287366EC0066E14D /* UIFont + Extansion.swift in Sources */,
 				48A2C46E287350FD0066E14D /* SceneDelegate.swift in Sources */,
+				48A2C480287362B90066E14D /* UIButton + Extansion.swift in Sources */,
+				48A2C48828736FE10066E14D /* UILabel + Extansion.swift in Sources */,
+				48A2C4862873687F0066E14D /* UIColor + Extansion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

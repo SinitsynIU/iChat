@@ -11,7 +11,7 @@ extension UIButton {
     
     convenience init(title: String,
                      titleColor: UIColor,
-                     font: UIFont? = .myAvanir20,
+                     font: UIFont? = .myAvenir20,
                      backgroundColor: UIColor,
                      isShadow: Bool = false,
                      cornerRadius: CGFloat = 4) {

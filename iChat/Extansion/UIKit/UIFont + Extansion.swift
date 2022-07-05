@@ -9,6 +9,6 @@ import UIKit
 
 extension UIFont {
     
-    static let myAvanir20 = UIFont.init(name: "avanir", size: 20)
-    static let myAvanir26 = UIFont.init(name: "avanir", size: 26)
+    static let myAvenir20 = UIFont.init(name: "avenir", size: 20)
+    static let myAvenir26 = UIFont.init(name: "avenir", size: 26)
 }

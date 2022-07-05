@@ -16,7 +16,13 @@ class SignUpViewController: UIViewController {
     let alreadyOnboardLabel = UILabel(text: "Already onboard?")
     
     let signUpButton = UIButton(title: "Sign Up", titleColor: .white, backgroundColor:  .myBlack, cornerRadius: 4)
-    let loginButton = UIButton()
+    let loginButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Login", for: .normal)
+        button.setTitleColor(.myRed, for: .normal)
+        button.titleLabel?.font = .myAvenir20
+        return button
+    }()
     
     let emailTextField = OneLineTextField(font: .myAvenir20)
     let passwordTextField = OneLineTextField(font: .myAvenir20)
@@ -35,9 +41,6 @@ extension SignUpViewController {
     
     private func setupUI() {
         view.backgroundColor = .white
-        loginButton.setTitle("Login", for: .normal)
-        loginButton.setTitleColor(.myRed, for: .normal)
-        loginButton.titleLabel?.font = .myAvenir20
     }
 }
 
@@ -58,9 +61,7 @@ extension SignUpViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         alreadyOnboardStackView.translatesAutoresizingMaskIntoConstraints = false
         
-        view.addSubview(welcomLabel)
-        view.addSubview(stackView)
-        view.addSubview(alreadyOnboardStackView)
+        [welcomLabel, stackView, alreadyOnboardStackView].forEach({view.addSubview($0)})
         
         NSLayoutConstraint.activate([
             welcomLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 160),

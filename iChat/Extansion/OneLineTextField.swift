@@ -18,7 +18,9 @@ class OneLineTextField: UITextField {
         var bottomView = UIView()
         bottomView = UIView.init(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         bottomView.backgroundColor = .myGray
+        
         bottomView.translatesAutoresizingMaskIntoConstraints = false
+        
         self.addSubview(bottomView)
         
         NSLayoutConstraint.activate([

@@ -9,11 +9,11 @@ import UIKit
 
 class ButtonFromView: UIView {
     
-    init(label: UILabel, button: UIButton) {
+    init(label: UILabel,
+         button: UIButton) {
         super.init(frame: .zero)
         
-        self.addSubview(label)
-        self.addSubview(button)
+        [label, button].forEach({self.addSubview($0)})
         
         self.translatesAutoresizingMaskIntoConstraints = false
         label.translatesAutoresizingMaskIntoConstraints = false

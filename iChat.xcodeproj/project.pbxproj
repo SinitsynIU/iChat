@@ -21,6 +21,7 @@
 		48A2C48F2873E6200066E14D /* UIStackView + Extansion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C48E2873E6200066E14D /* UIStackView + Extansion.swift */; };
 		48A2C4912873EDFF0066E14D /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C4902873EDFF0066E14D /* SignUpViewController.swift */; };
 		48A2C4932873F6AB0066E14D /* OneLineTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C4922873F6AB0066E14D /* OneLineTextField.swift */; };
+		48A2C496287414A30066E14D /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C495287414A30066E14D /* LoginViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		48A2C48E2873E6200066E14D /* UIStackView + Extansion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView + Extansion.swift"; sourceTree = "<group>"; };
 		48A2C4902873EDFF0066E14D /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		48A2C4922873F6AB0066E14D /* OneLineTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneLineTextField.swift; sourceTree = "<group>"; };
+		48A2C495287414A30066E14D /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,10 +75,9 @@
 			isa = PBXGroup;
 			children = (
 				48A2C4832873671D0066E14D /* Extansion */,
+				48A2C494287414670066E14D /* ViewControllers */,
 				48A2C46B287350FD0066E14D /* AppDelegate.swift */,
 				48A2C46D287350FD0066E14D /* SceneDelegate.swift */,
-				48A2C46F287350FD0066E14D /* AuthViewController.swift */,
-				48A2C4902873EDFF0066E14D /* SignUpViewController.swift */,
 				48A2C474287350FE0066E14D /* Assets.xcassets */,
 				48A2C476287350FE0066E14D /* LaunchScreen.storyboard */,
 				48A2C479287350FE0066E14D /* Info.plist */,
@@ -105,6 +106,16 @@
 				48A2C48E2873E6200066E14D /* UIStackView + Extansion.swift */,
 			);
 			path = UIKit;
+			sourceTree = "<group>";
+		};
+		48A2C494287414670066E14D /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				48A2C4902873EDFF0066E14D /* SignUpViewController.swift */,
+				48A2C46F287350FD0066E14D /* AuthViewController.swift */,
+				48A2C495287414A30066E14D /* LoginViewController.swift */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -188,6 +199,7 @@
 				48A2C46E287350FD0066E14D /* SceneDelegate.swift in Sources */,
 				48A2C480287362B90066E14D /* UIButton + Extansion.swift in Sources */,
 				48A2C48828736FE10066E14D /* UILabel + Extansion.swift in Sources */,
+				48A2C496287414A30066E14D /* LoginViewController.swift in Sources */,
 				48A2C4862873687F0066E14D /* UIColor + Extansion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

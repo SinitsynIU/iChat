@@ -9,7 +9,8 @@ import UIKit
 
 extension UILabel {
     
-    convenience init(text: String, font: UIFont? = .myAvenir20) {
+    convenience init(text: String,
+                     font: UIFont? = .myAvenir20) {
         self.init()
         self.text = text
         self.font = font

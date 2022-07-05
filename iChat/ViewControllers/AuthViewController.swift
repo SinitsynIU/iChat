@@ -48,8 +48,7 @@ extension AuthViewController {
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        view.addSubview(logoImageView)
-        view.addSubview(stackView)
+        [logoImageView, stackView].forEach({view.addSubview($0)})
         
         NSLayoutConstraint.activate([
             logoImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 160),

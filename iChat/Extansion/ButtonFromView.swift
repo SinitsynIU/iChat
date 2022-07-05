@@ -12,7 +12,7 @@ class ButtonFromView: UIView {
     init(label: UILabel,
          button: UIButton) {
         super.init(frame: .zero)
-        
+    
         [label, button].forEach({self.addSubview($0)})
         
         self.translatesAutoresizingMaskIntoConstraints = false

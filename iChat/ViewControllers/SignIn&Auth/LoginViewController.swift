@@ -42,6 +42,7 @@ extension LoginViewController {
     
     private func setupUI() {
         view.backgroundColor = .white
+        googleButton.customizeImageViewForButton()
     }
 }
 

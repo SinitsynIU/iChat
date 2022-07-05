@@ -28,4 +28,17 @@ extension UIButton {
         }
         self.layer.cornerRadius = cornerRadius
     }
+    
+    func customizeImageViewForButton() {
+        let image = UIImageView(image: #imageLiteral(resourceName: "googleLogo"), contentMode: .scaleAspectFit)
+        
+        image.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(image)
+        
+        NSLayoutConstraint.activate([
+            image.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 24),
+            image.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+        ])
+    }
 }

@@ -78,8 +78,6 @@ extension SignUpViewController {
             alreadyOnboardStackView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 60),
             alreadyOnboardStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
-        
-        
     }
 }
 

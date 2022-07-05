@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  AuthViewController.swift
 //  iChat
 //
 //  Created by Илья Синицын on 04.07.2022.
@@ -32,6 +32,7 @@ extension AuthViewController {
     
     private func setupUI() {
         view.backgroundColor = .white
+        googleButton.customizeImageViewForButton()
     }
 }
 

@@ -20,7 +20,7 @@ class MainTabBarController: UITabBarController {
 extension MainTabBarController {
     
     private func setupTabBarController() {
-        tabBar.tintColor = #colorLiteral(red: 0.5568627451, green: 0.3529411765, blue: 0.968627451, alpha: 1)
+        tabBar.tintColor = .myPurple
         let boldConfiguration = UIImage.SymbolConfiguration(weight: .medium)
         
         let listViewController = ListViewController()

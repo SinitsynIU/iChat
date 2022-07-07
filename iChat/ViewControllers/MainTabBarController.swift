@@ -24,12 +24,12 @@ extension MainTabBarController {
         let boldConfiguration = UIImage.SymbolConfiguration(weight: .medium)
         
         let listViewController = ListViewController()
-        let peopleViewController = PeopleViewController()
+        let usersViewController = UsersViewController()
         
         guard let listImage = UIImage(systemName: "bubble.left.and.bubble.right", withConfiguration: boldConfiguration),
-              let peopleImage = UIImage(systemName: "person.2", withConfiguration: boldConfiguration) else { return }
+              let userImage = UIImage(systemName: "person.2", withConfiguration: boldConfiguration) else { return }
         
-        viewControllers = [generateNavigationController(rootViewController: listViewController, titel: "Conversations", image: listImage), generateNavigationController(rootViewController: peopleViewController, titel: "People", image: peopleImage)]
+        viewControllers = [generateNavigationController(rootViewController: listViewController, titel: "Conversations", image: listImage), generateNavigationController(rootViewController: usersViewController, titel: "People", image: userImage)]
     }
     
     private func generateNavigationController(rootViewController: UIViewController, titel: String, image: UIImage) -> UIViewController {

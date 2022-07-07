@@ -11,5 +11,5 @@ protocol ProtocolConfigurationCell {
     
     static var reuseId: String { get }
     
-    func configurationCell(with value: MChat)
+    func configurationCell<U: Hashable>(with value: U)
 }

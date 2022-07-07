@@ -18,4 +18,6 @@ extension UIColor {
     static let myPurple = #colorLiteral(red: 0.5568627451, green: 0.3529411765, blue: 0.968627451, alpha: 1)
     static let myLightPurple = #colorLiteral(red: 0.7882352941, green: 0.631372549, blue: 0.9411764706, alpha: 1)
     static let myLightBlue = #colorLiteral(red: 0.4784313725, green: 0.6980392157, blue: 0.9215686275, alpha: 1)
+    static let myLightGray = #colorLiteral(red: 0.7411764706, green: 0.7411764706, blue: 0.7411764706, alpha: 1)
+    static let myLightRed = #colorLiteral(red: 0.8352941176, green: 0.2, blue: 0.2, alpha: 1)
 }

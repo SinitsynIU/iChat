@@ -28,8 +28,14 @@ class WaitingChatCell: UICollectionViewCell, ProtocolConfigurationCell {
 // MARK: - ConfigurationCell
 extension WaitingChatCell {
     
-    func configurationCell(with value: MChat) {
-        imageView.image = UIImage(named: value.userImage)
+    func configurationCell<U>(with value: U) where U : Hashable {
+        guard let user: MChat = value as? MChat else { return }
+        
+        if user.userImage == "" {
+            imageView.image = UIImage(named: "avatar")
+        } else {
+            imageView.image = UIImage(named: user.userImage)
+        }
     }
 }
 
@@ -40,8 +46,6 @@ extension WaitingChatCell {
         self.backgroundColor = .white
         self.layer.cornerRadius = 4
         self.clipsToBounds = true
-        
-        imageView.backgroundColor = .red
     }
 }
 

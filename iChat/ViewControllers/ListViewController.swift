@@ -10,18 +10,18 @@ import UIKit
 class ListViewController: UIViewController {
     
     let activeChats: [MChat] = [
-        MChat(userName: "Ilya", userImage: "person", message: "How are you?", id: 0),
-        MChat(userName: "Andrey", userImage: "person", message: "Hellow!", id: 1),
-        MChat(userName: "Anna", userImage: "person", message: "My name is Anna", id: 2),
-        MChat(userName: "Bob", userImage: "person", message: "Go to magazin?", id: 3),
-        MChat(userName: "Roy", userImage: "person", message: "Hellow Anna!", id: 4),
-        MChat(userName: "Jack", userImage: "person", message: "Hellow Bob!", id: 5)
+        MChat(userName: "Ilya", userImage: "", message: "How are you?", id: 0),
+        MChat(userName: "Andrey", userImage: "", message: "Hellow!", id: 1),
+        MChat(userName: "Anna", userImage: "", message: "My name is Anna", id: 2),
+        MChat(userName: "Bob", userImage: "", message: "Go to magazin?", id: 3),
+        MChat(userName: "Roy", userImage: "", message: "Hellow Anna!", id: 4),
+        MChat(userName: "Jack", userImage: "", message: "Hellow Bob!", id: 5)
     ]
     
     let waitingChats: [MChat] = [
-        MChat(userName: "Igor", userImage: "person", message: "How are you?", id: 7),
-        MChat(userName: "Kati", userImage: "person", message: "Hellow!", id: 8),
-        MChat(userName: "Pol", userImage: "person", message: "My name is Anna", id: 9),
+        MChat(userName: "Igor", userImage: "", message: "How are you?", id: 7),
+        MChat(userName: "Kati", userImage: "", message: "Hellow!", id: 8),
+        MChat(userName: "Pol", userImage: "", message: "My name is Anna", id: 9),
     ]
     
     enum Section: Int, CaseIterable {
@@ -45,11 +45,10 @@ class ListViewController: UIViewController {
         super.viewDidLoad()
         
         setupUI()
-        setupConstraints()
         setupSearchBar()
         setupCollectionView()
         setupCeateDataSource()
-        reloadData()
+        reloadData(with: nil)
     }
 }
 
@@ -58,14 +57,6 @@ extension ListViewController {
     
     private func setupUI() {
         view.backgroundColor = .white
-    }
-}
-
-// MARK: - SetupConstraints
-extension ListViewController {
-    
-    private func setupConstraints() {
-        
     }
 }
 
@@ -85,12 +76,16 @@ extension ListViewController {
         collectionView.register(WaitingChatCell.self, forCellWithReuseIdentifier: WaitingChatCell.reuseId)
     }
     
-    private func reloadData() {
+    private func reloadData(with searchText: String?) {
+        let filtered = activeChats.filter { (user) -> Bool in
+            user.contains(filter: searchText)
+        }
+        
         var snapshot = NSDiffableDataSourceSnapshot<Section, MChat>()
         
         snapshot.appendSections([.waitingChats, .activeChats])
         snapshot.appendItems(waitingChats, toSection: .waitingChats)
-        snapshot.appendItems(activeChats, toSection: .activeChats)
+        snapshot.appendItems(filtered, toSection: .activeChats)
         
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
@@ -99,21 +94,15 @@ extension ListViewController {
 // MARK: - SetupCollectionViewDataSource
 extension ListViewController {
     
-    private func configurationCell<T: ProtocolConfigurationCell>(cellType: T.Type, with value: MChat, for indexPath: IndexPath) -> T {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellType.reuseId, for: indexPath) as? T else { fatalError("Unable to dequeue \(cellType)") }
-        cell.configurationCell(with: value)
-        return cell
-    }
-    
     private func setupCeateDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             guard let section = Section(rawValue: indexPath.section) else { fatalError("Unknown section kind") }
             
             switch section {
             case .activeChats:
-                return self.configurationCell(cellType: ActiveChatCell.self, with: itemIdentifier, for: indexPath)
+                return self.configurationCell(collectionView: collectionView, cellType: ActiveChatCell.self, with: itemIdentifier, for: indexPath)
             case .waitingChats:
-                return self.configurationCell(cellType: WaitingChatCell.self, with: itemIdentifier, for: indexPath)
+                return self.configurationCell(collectionView: collectionView, cellType: WaitingChatCell.self, with: itemIdentifier, for: indexPath)
             }
         })
         
@@ -139,9 +128,9 @@ extension ListViewController {
             
             switch section {
             case .activeChats:
-                return self.createActiveChats()
+                return self.createActiveChatsSections()
             case .waitingChats:
-                return self.createWaitingChats()
+                return self.createWaitingChatsSections()
             }
         }
         
@@ -160,7 +149,7 @@ extension ListViewController {
         return sectionHeader
     }
     
-    private func createActiveChats() -> NSCollectionLayoutSection {
+    private func createActiveChatsSections() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                               heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -179,7 +168,7 @@ extension ListViewController {
         return section
     }
     
-    private func createWaitingChats() -> NSCollectionLayoutSection {
+    private func createWaitingChatsSections() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
                                               heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -218,7 +207,12 @@ extension ListViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
+        reloadData(with: searchText)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = nil
+        reloadData(with: nil)
     }
 }
 

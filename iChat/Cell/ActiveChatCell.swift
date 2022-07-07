@@ -14,8 +14,8 @@ class ActiveChatCell: UICollectionViewCell, ProtocolConfigurationCell {
     let imageView = UIImageView()
     let gradientView = GradientView(from: .trailing, to: .bottomLeading, startColor: .myLightPurple, endColor: .myLightBlue)
     
-    let name = UILabel(text: "User name", font: .laoSangamMN20)
-    let message = UILabel(text: "Massage", font: .laoSangamMN18)
+    let nameLabel = UILabel(text: "User name", font: .laoSangamMN20)
+    let messageLabel = UILabel(text: "Massage", font: .laoSangamMN18)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,10 +32,17 @@ class ActiveChatCell: UICollectionViewCell, ProtocolConfigurationCell {
 // MARK: - ConfigurationCell
 extension ActiveChatCell {
     
-    func configurationCell(with value: MChat) {
-        imageView.image = UIImage(named: value.userImage)
-        name.text = value.userName
-        message.text = value.message
+    func configurationCell<U>(with value: U) where U : Hashable {
+        guard let user: MChat = value as? MChat else { return }
+        
+        if user.userImage == "" {
+            imageView.image = UIImage(named: "avatar")
+        } else {
+            imageView.image = UIImage(named: user.userImage)
+        }
+        
+        nameLabel.text = user.userName
+        messageLabel.text = user.message
     }
 }
 
@@ -46,9 +53,6 @@ extension ActiveChatCell {
         self.backgroundColor = .white
         self.layer.cornerRadius = 4
         self.clipsToBounds = true
-        
-        imageView.backgroundColor = .blue
-        gradientView.backgroundColor = .red
     }
 }
 
@@ -58,10 +62,10 @@ extension ActiveChatCell {
     private func setupConstraints() {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         gradientView.translatesAutoresizingMaskIntoConstraints = false
-        name.translatesAutoresizingMaskIntoConstraints = false
-        message.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        messageLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        [imageView, gradientView, name, message].forEach({self.addSubview($0)})
+        [imageView, gradientView, nameLabel, messageLabel].forEach({self.addSubview($0)})
         
         NSLayoutConstraint.activate([
             imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
@@ -71,15 +75,15 @@ extension ActiveChatCell {
         ])
         
         NSLayoutConstraint.activate([
-            name.topAnchor.constraint(equalTo: self.topAnchor, constant: 12),
-            name.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),
-            name.trailingAnchor.constraint(equalTo: gradientView.leadingAnchor, constant: 16)
+            nameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 12),
+            nameLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),
+            nameLabel.trailingAnchor.constraint(equalTo: gradientView.leadingAnchor, constant: 16)
         ])
         
         NSLayoutConstraint.activate([
-            message.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -12),
-            message.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),
-            message.trailingAnchor.constraint(equalTo: gradientView.leadingAnchor, constant: 16)
+            messageLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -12),
+            messageLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 16),
+            messageLabel.trailingAnchor.constraint(equalTo: gradientView.leadingAnchor, constant: 16)
         ])
         
         NSLayoutConstraint.activate([

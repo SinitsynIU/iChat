@@ -54,6 +54,7 @@ extension SetupProfileViewController {
         
         welcomLabel.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         
         [welcomLabel, imageView, stackView].forEach({view.addSubview($0)})
         

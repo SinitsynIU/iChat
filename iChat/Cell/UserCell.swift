@@ -43,7 +43,7 @@ extension UserCell {
         if user.userImage == "" {
             imageView.image = UIImage(named: "avatar")
         } else {
-            imageView.image = UIImage(named: user.userImage)
+            imageView.image = UIImage(named: user.userImage!)
         }
 
         nameLabel.text = user.userName

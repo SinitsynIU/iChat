@@ -9,6 +9,17 @@ import UIKit
 
 class MainTabBarController: UITabBarController {
     
+    private let currentUser: MUser
+    
+    init(currentUser: MUser = MUser(userName: "nil", email: "nil", userImage: "", description: "nil", sex: "nil", uid: "nil")) {
+        self.currentUser = currentUser
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -23,8 +34,8 @@ extension MainTabBarController {
         tabBar.tintColor = .myPurple
         let boldConfiguration = UIImage.SymbolConfiguration(weight: .medium)
         
-        let listViewController = ListViewController()
-        let usersViewController = UsersViewController()
+        let listViewController = ListViewController(currentUser: currentUser)
+        let usersViewController = UsersViewController(currentUser: currentUser)
         
         guard let listImage = UIImage(systemName: "bubble.left.and.bubble.right", withConfiguration: boldConfiguration),
               let userImage = UIImage(systemName: "person.2", withConfiguration: boldConfiguration) else { return }

@@ -6,17 +6,11 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class UsersViewController: UIViewController {
     
-    let users: [MUser] = [
-        MUser(userName: "Ilya", userImage: "", id: 0),
-        MUser(userName: "Andrey", userImage: "", id: 1),
-        MUser(userName: "Anna", userImage: "", id: 2),
-        MUser(userName: "Bob", userImage: "", id: 3),
-        MUser(userName: "Roy", userImage: "", id: 4),
-        MUser(userName: "Jack", userImage: "", id: 5)
-    ]
+    let users: [MUser] = []
     
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, MUser>?
@@ -32,6 +26,18 @@ class UsersViewController: UIViewController {
         }
     }
     
+    private let currentUser: MUser
+    
+    init(currentUser: MUser) {
+        self.currentUser = currentUser
+        super.init(nibName: nil, bundle: nil)
+        title = currentUser.userName
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -40,6 +46,29 @@ class UsersViewController: UIViewController {
         setupCollectionView()
         setupCeateDataSource()
         reloadData(with: nil)
+        setupActions()
+    }
+}
+
+// MARK: - SetupActions
+extension UsersViewController {
+    
+    private func setupActions() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(signOutButtonAction))
+    }
+    
+    @objc private func signOutButtonAction() {
+        let alertController = UIAlertController(title: nil, message: "Are you sure you want to sign out?", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Sign Out", style: .destructive, handler: { (_) in
+            do {
+                try Auth.auth().signOut()
+                UIApplication.shared.keyWindow?.rootViewController = AuthViewController()
+            } catch {
+                print("Error signing out \(error.localizedDescription)")
+            }
+        }))
+        present(alertController, animated: true, completion: nil)
     }
 }
 
@@ -195,7 +224,7 @@ struct UsersViewControllerProvider: PreviewProvider {
     
     struct ContainerView: UIViewControllerRepresentable {
         
-        let viewController = UsersViewController()
+        let viewController = MainTabBarController()
          
         func makeUIViewController(context: Context) -> some UIViewController {
             return viewController

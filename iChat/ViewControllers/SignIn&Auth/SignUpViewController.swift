@@ -28,11 +28,42 @@ class SignUpViewController: UIViewController {
     let passwordTextField = OneLineTextField(font: .myAvenir20)
     let confirmPasswordTextField = OneLineTextField(font: .myAvenir20)
     
+    weak var delegate: ProtocolAuthNavigatingDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
         setupConstraints()
+        setupActions()
+    }
+}
+
+// MARK: - SetupActions
+extension SignUpViewController {
+    
+    private func setupActions() {
+        signUpButton.addTarget(self, action: #selector(signUpButtonActions), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(loginButtonActions), for: .touchUpInside)
+    }
+    
+    @objc private func signUpButtonActions() {
+        AuthServiceManager.shered.register(email: emailTextField.text, password: passwordTextField.text, confirmPassword: confirmPasswordTextField.text) { (result) in
+            switch result {
+            case .success(let user):
+                self.showAlert(titel: "Success", message: "You are registered.") {
+                    self.present(SetupProfileViewController(currentUser: user), animated: true, completion: nil)
+                }
+            case .failure(let error):
+                self.showAlert(titel: "Error", message: error.localizedDescription)
+            }
+        }
+    }
+    
+    @objc private func loginButtonActions() {
+        dismiss(animated: true) {
+            self.delegate?.toLoginVC()
+        }
     }
 }
 
@@ -64,18 +95,18 @@ extension SignUpViewController {
         [welcomLabel, stackView, alreadyOnboardStackView].forEach({view.addSubview($0)})
         
         NSLayoutConstraint.activate([
-            welcomLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 160),
+            welcomLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
             welcomLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: welcomLabel.bottomAnchor, constant: 130),
+            stackView.topAnchor.constraint(equalTo: welcomLabel.bottomAnchor, constant: 120),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -40)
         ])
         
         NSLayoutConstraint.activate([
-            alreadyOnboardStackView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 60),
+            alreadyOnboardStackView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 50),
             alreadyOnboardStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }

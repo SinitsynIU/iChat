@@ -1,5 +1,5 @@
 //
-//  ProfileViewController.swift
+//  SetupProfileViewController.swift
 //  iChat
 //
 //  Created by Илья Синицын on 07.07.2022.

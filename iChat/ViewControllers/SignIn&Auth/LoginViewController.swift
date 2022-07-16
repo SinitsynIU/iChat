@@ -6,6 +6,9 @@
 //
 
 import UIKit
+import GoogleSignIn
+import FirebaseCore
+import FirebaseAuth
 
 class LoginViewController: UIViewController {
     
@@ -29,11 +32,83 @@ class LoginViewController: UIViewController {
     let emailTextField = OneLineTextField(font: .myAvenir20)
     let passwordTextField = OneLineTextField(font: .myAvenir20)
     
+    weak var delegate: ProtocolAuthNavigatingDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
         setupConstraints()
+        setupActions() 
+    }
+}
+
+// MARK: - SetupActions
+extension LoginViewController {
+    
+    private func setupActions() {
+        googleButton.addTarget(self, action: #selector(googleButtonActions), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(loginButtonActions), for: .touchUpInside)
+        signUpButton.addTarget(self, action: #selector(signUpButtonActions), for: .touchUpInside)
+    }
+    
+    @objc private func googleButtonActions() {
+        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
+        
+        let config = GIDConfiguration(clientID: clientID)
+
+        GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
+
+            AuthServiceManager.shered.googleLogin(user: user, error: error) { (result) in
+                switch result {
+                case .success(let user):
+                    FirestoreServiceManager.shared.getUserData(user: user) { (result) in
+                        switch result {
+                        case .success(let muser):
+                            self.showAlert(titel: "Success", message: "You are authorized.") {
+                                let mainTabBar = MainTabBarController(currentUser: muser)
+                                mainTabBar.modalPresentationStyle = .fullScreen
+                                self.present(mainTabBar, animated: true, completion: nil)
+                            }
+                        case .failure(_):
+                            self.showAlert(titel: "Success", message: "You are registered.") {
+                                self.present(SetupProfileViewController(currentUser: user), animated: true, completion: nil)
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    self.showAlert(titel: "Error", message: error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    @objc private func loginButtonActions() {
+        AuthServiceManager.shered.login(email: emailTextField.text, password: passwordTextField.text) { (result) in
+        switch result {
+        case .success(let user):
+            self.showAlert(titel: "Success", message: "You are authorized.") {
+                FirestoreServiceManager.shared.getUserData(user: user) { (result) in
+                    switch result {
+                    case .success(let muser):
+                        let mainTabBar = MainTabBarController(currentUser: muser)
+                        mainTabBar.modalPresentationStyle = .fullScreen
+                        self.present(mainTabBar, animated: true, completion: nil)
+                    case .failure(_):
+                        self.present(SetupProfileViewController(currentUser: user), animated: true, completion: nil)
+                    }
+                }
+            }
+        case .failure(let error):
+            self.showAlert(titel: "Error", message: error.localizedDescription)
+        }
+        }
+    }
+    
+    @objc private func signUpButtonActions() {
+        dismiss(animated: true) {
+            self.delegate?.toSignUpVC()
+        }
     }
 }
 
@@ -68,23 +143,23 @@ extension LoginViewController {
         [welcomLabel, loginView, orLabel, stackView, needAnAccountStackView].forEach({view.addSubview($0)})
         
         NSLayoutConstraint.activate([
-            welcomLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
+            welcomLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
             welcomLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            loginView.topAnchor.constraint(equalTo: welcomLabel.bottomAnchor, constant: 70),
+            loginView.topAnchor.constraint(equalTo: welcomLabel.bottomAnchor, constant: 50),
             loginView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             loginView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -40)
         ])
         
         NSLayoutConstraint.activate([
-            orLabel.topAnchor.constraint(equalTo: loginView.bottomAnchor, constant: 30),
+            orLabel.topAnchor.constraint(equalTo: loginView.bottomAnchor, constant: 20),
             orLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: orLabel.bottomAnchor, constant: 30),
+            stackView.topAnchor.constraint(equalTo: orLabel.bottomAnchor, constant: 15),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -40)
         ])

@@ -6,23 +6,13 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ListViewController: UIViewController {
     
-    let activeChats: [MChat] = [
-        MChat(userName: "Ilya", userImage: "", message: "How are you?", id: 0),
-        MChat(userName: "Andrey", userImage: "", message: "Hellow!", id: 1),
-        MChat(userName: "Anna", userImage: "", message: "My name is Anna", id: 2),
-        MChat(userName: "Bob", userImage: "", message: "Go to magazin?", id: 3),
-        MChat(userName: "Roy", userImage: "", message: "Hellow Anna!", id: 4),
-        MChat(userName: "Jack", userImage: "", message: "Hellow Bob!", id: 5)
-    ]
+    let activeChats: [MChat] = []
     
-    let waitingChats: [MChat] = [
-        MChat(userName: "Igor", userImage: "", message: "How are you?", id: 7),
-        MChat(userName: "Kati", userImage: "", message: "Hellow!", id: 8),
-        MChat(userName: "Pol", userImage: "", message: "My name is Anna", id: 9),
-    ]
+    let waitingChats: [MChat] = []
     
     enum Section: Int, CaseIterable {
         case waitingChats
@@ -41,6 +31,18 @@ class ListViewController: UIViewController {
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, MChat>?
     
+    private let currentUser: MUser
+    
+    init(currentUser: MUser) {
+        self.currentUser = currentUser
+        super.init(nibName: nil, bundle: nil)
+        title = currentUser.userName
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -49,6 +51,29 @@ class ListViewController: UIViewController {
         setupCollectionView()
         setupCeateDataSource()
         reloadData(with: nil)
+        setupActions() 
+    }
+}
+
+// MARK: - SetupActions
+extension ListViewController {
+    
+    private func setupActions() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(signOutButtonAction))
+    }
+    
+    @objc private func signOutButtonAction() {
+        let alertController = UIAlertController(title: nil, message: "Are you sure you want to sign out?", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Sign Out", style: .destructive, handler: { (_) in
+            do {
+                try Auth.auth().signOut()
+                UIApplication.shared.keyWindow?.rootViewController = AuthViewController()
+            } catch {
+                print("Error signing out \(error.localizedDescription)")
+            }
+        }))
+        present(alertController, animated: true, completion: nil)
     }
 }
 
@@ -227,7 +252,7 @@ struct ListViewControllerProvider: PreviewProvider {
     
     struct ContainerView: UIViewControllerRepresentable {
         
-        let viewController = ListViewController()
+        let viewController = MainTabBarController()
          
         func makeUIViewController(context: Context) -> some UIViewController {
             return viewController

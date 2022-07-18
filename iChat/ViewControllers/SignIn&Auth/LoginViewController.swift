@@ -72,7 +72,9 @@ extension LoginViewController {
                             }
                         case .failure(_):
                             self.showAlert(titel: "Success", message: "You are registered.") {
-                                self.present(SetupProfileViewController(currentUser: user), animated: true, completion: nil)
+                                let setupProfile = SetupProfileViewController(currentUser: user)
+                                setupProfile.modalPresentationStyle = .fullScreen
+                                self.present(setupProfile, animated: true, completion: nil)
                             }
                         }
                     }
@@ -95,7 +97,9 @@ extension LoginViewController {
                         mainTabBar.modalPresentationStyle = .fullScreen
                         self.present(mainTabBar, animated: true, completion: nil)
                     case .failure(_):
-                        self.present(SetupProfileViewController(currentUser: user), animated: true, completion: nil)
+                        let setupProfile = SetupProfileViewController(currentUser: user)
+                        setupProfile.modalPresentationStyle = .fullScreen
+                        self.present(setupProfile, animated: true, completion: nil)
                     }
                 }
             }

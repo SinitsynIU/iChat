@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import SDWebImage
 
 class SetupProfileViewController: UIViewController {
     
@@ -33,6 +34,9 @@ class SetupProfileViewController: UIViewController {
         if let userName = currentUser.displayName {
             fullNameTextField.text = userName
         }
+        if let imageURL = currentUser.photoURL {
+            imageView.avatarImageView.sd_setImage(with: imageURL, completed: nil)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -53,10 +57,11 @@ extension SetupProfileViewController {
     
     private func setupActions() {
         goToChatsButton.addTarget(self, action: #selector(goToChatsButtonActions), for: .touchUpInside)
+        imageView.button.addTarget(self, action: #selector(addAvatarImageButtonActions), for: .touchUpInside)
     }
     
     @objc private func goToChatsButtonActions() {
-        FirestoreServiceManager.shared.saveProfile(uid: currentUser.uid, email: currentUser.email!, userName: fullNameTextField.text, userImage: "NOT", description: aboutMeTextField.text, sex: sexSegmentedControl.titleForSegment(at: sexSegmentedControl.selectedSegmentIndex)) { (result) in
+        FirestoreServiceManager.shared.saveProfile(uid: currentUser.uid, email: currentUser.email!, userName: fullNameTextField.text, userImage: imageView.avatarImageView.image, description: aboutMeTextField.text, sex: sexSegmentedControl.titleForSegment(at: sexSegmentedControl.selectedSegmentIndex)) { (result) in
             switch result {
             case .success(let muser):
                 self.showAlert(titel: "Success", message: "Pleasant communication!") {
@@ -68,6 +73,14 @@ extension SetupProfileViewController {
                 self.showAlert(titel: "Error", message: error.localizedDescription)
             }
         }
+    }
+    
+    @objc private func addAvatarImageButtonActions() {
+        let imagePickerController  = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = .photoLibrary
+        present(imagePickerController, animated: true, completion: nil)
+        
     }
 }
 
@@ -113,6 +126,17 @@ extension SetupProfileViewController {
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -40)
         ])
+    }
+}
+
+// MARK: - UIImagePickerControllerDelegate & UINavigationControllerDelegate
+extension SetupProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        picker.dismiss(animated: true)
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        imageView.avatarImageView.image = image
     }
 }
 

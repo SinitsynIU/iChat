@@ -35,14 +35,14 @@ extension ActiveChatCell {
     func configurationCell<U>(with value: U) where U : Hashable {
         guard let user: MChat = value as? MChat else { return }
         
-        if user.userImage == "" {
-            imageView.image = UIImage(named: "avatar")
-        } else {
-            imageView.image = UIImage(named: user.userImage)
-        }
-        
-        nameLabel.text = user.userName
-        messageLabel.text = user.message
+//        if user.userImage == "" {
+//            imageView.image = UIImage(named: "avatar")
+//        } else {
+//            imageView.image = UIImage(named: user.userImage)
+//        }
+//        
+//        nameLabel.text = user.userName
+//        messageLabel.text = user.message
     }
 }
 

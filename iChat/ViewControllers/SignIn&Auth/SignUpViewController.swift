@@ -52,7 +52,9 @@ extension SignUpViewController {
             switch result {
             case .success(let user):
                 self.showAlert(titel: "Success", message: "You are registered.") {
-                    self.present(SetupProfileViewController(currentUser: user), animated: true, completion: nil)
+                    let setupProfile = SetupProfileViewController(currentUser: user)
+                    setupProfile.modalPresentationStyle = .fullScreen
+                    self.present(setupProfile, animated: true, completion: nil)
                 }
             case .failure(let error):
                 self.showAlert(titel: "Error", message: error.localizedDescription)

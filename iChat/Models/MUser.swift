@@ -11,8 +11,8 @@ import FirebaseFirestore
 struct MUser: Hashable, Decodable {
     var userName: String
     var email: String
-    var userImage: String?
-    var description: String?
+    var userImage: String
+    var description: String
     var sex: String
     var uid: String
     
@@ -32,11 +32,33 @@ struct MUser: Hashable, Decodable {
         guard let uid = data["uid"] as? String else { return nil }
         guard let sex = data["sex"] as? String else { return nil }
         guard let email = data["email"] as? String else { return nil }
+        guard let image = data["userImage"] as? String else { return nil }
+        guard let description = data["description"] as? String else { return nil }
         
         self.uid = uid
         self.email = email
         self.userName = userName
         self.sex = sex
+        self.userImage = image
+        self.description = description
+    }
+    
+    init?(document: QueryDocumentSnapshot) {
+        let data = document.data()
+        
+        guard let userName = data["userName"] as? String else { return nil }
+        guard let uid = data["uid"] as? String else { return nil }
+        guard let sex = data["sex"] as? String else { return nil }
+        guard let email = data["email"] as? String else { return nil }
+        guard let image = data["userImage"] as? String else { return nil }
+        guard let description = data["description"] as? String else { return nil }
+        
+        self.uid = uid
+        self.email = email
+        self.userName = userName
+        self.sex = sex
+        self.userImage = image
+        self.description = description
     }
     
     var representation: [String: Any] {

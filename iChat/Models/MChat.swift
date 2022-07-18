@@ -8,23 +8,33 @@
 import UIKit
 
 struct MChat: Hashable, Decodable {
-    var userName: String
-    var userImage: String
-    var message: String
-    var id: Int
+    var friendUserName: String
+    var friendUserImage: String
+    var messageContent: String
+    var friendId: String
+    
+    var representation: [String : Any] {
+        let representation = [
+            "friendUserName": friendUserName,
+            "friendUserImage": friendUserImage,
+            "friendId": friendId,
+            "messageContent": messageContent
+        ]
+        return representation
+    }
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(friendId)
     }
     
     static func == (lhs: MChat, rhs: MChat) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.friendId == rhs.friendId
     }
     
     func contains(filter: String?) -> Bool {
         guard let filter = filter else { return true }
         if filter.isEmpty { return true }
         let lowercasedFilter = filter.lowercased()
-        return userName.lowercased().contains(lowercasedFilter)
+        return friendUserName.lowercased().contains(lowercasedFilter)
     }
 }

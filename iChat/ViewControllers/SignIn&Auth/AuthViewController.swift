@@ -67,14 +67,16 @@ extension AuthViewController {
                     FirestoreServiceManager.shared.getUserData(user: user) { (result) in
                         switch result {
                         case .success(let muser):
-                            self.showAlert(titel: "Success", message: "You are registered.") {
+                            UIApplication.getTopViewController()?.showAlert(titel: "Success", message: "You are registered.") {
                                 let mainTabBar = MainTabBarController(currentUser: muser)
                                 mainTabBar.modalPresentationStyle = .fullScreen
                                 self.present(mainTabBar, animated: true, completion: nil)
                             }
                         case .failure(_):
-                            self.showAlert(titel: "Success", message: "You are registered.") {
-                                self.present(SetupProfileViewController(currentUser: user), animated: true, completion: nil)
+                            UIApplication.getTopViewController()?.showAlert(titel: "Success", message: "You are registered.") {
+                                let setupProfile = SetupProfileViewController(currentUser: user)
+                                setupProfile.modalPresentationStyle = .fullScreen
+                                self.present(setupProfile, animated: true, completion: nil)
                             }
                         }
                     }
@@ -132,107 +134,6 @@ extension AuthViewController {
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
         ])
-    }
-}
-
-// MARK: - GoogleSignIn
-extension AuthViewController  {
-     
-    private func GoogleSignIn() {
-        
-        
-//        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
-//
-//        let config = GIDConfiguration(clientID: clientID)
-//
-//        GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
-//
-//            AuthServiceManager.shered.googleLogin(user: user, error: error) { (result) in
-//                switch result {
-//                case .success(let user):
-//                    FirestoreServiceManager.shared.getUserData(user: user) { (result) in
-//                        switch result {
-//                        case .success(let muser):
-//                            self.showAlert(titel: "Success", message: "You are registered.") {
-//                                let mainTabBar = MainTabBarController(currentUser: muser)
-//                                mainTabBar.modalPresentationStyle = .fullScreen
-//                                self.present(mainTabBar, animated: true, completion: nil)
-//                            }
-//                        case .failure(let error):
-//                            self.showAlert(titel: "Success", message: "You are registered.") {
-//                                self.present(SetupProfileViewController(currentUser: user), animated: true, completion: nil)
-//                            }
-//                        }
-//                    }
-//                case .failure(let error):
-//                    self.showAlert(titel: "Error", message: error.localizedDescription)
-//                }
-//            }
-
-//        Auth.auth().signIn(with: credential) { authResult, error in
-//            if let error = error {
-//              let authError = error as NSError
-//              if isMFAEnabled, authError.code == AuthErrorCode.secondFactorRequired.rawValue {
-//                // The user is a multi-factor user. Second factor challenge is required.
-//                let resolver = authError
-//                  .userInfo[AuthErrorUserInfoMultiFactorResolverKey] as! MultiFactorResolver
-//                var displayNameString = ""
-//                for tmpFactorInfo in resolver.hints {
-//                  displayNameString += tmpFactorInfo.displayName ?? ""
-//                  displayNameString += " "
-//                }
-//                self.showTextInputPrompt(
-//                  withMessage: "Select factor to sign in\n\(displayNameString)",
-//                  completionBlock: { userPressedOK, displayName in
-//                    var selectedHint: PhoneMultiFactorInfo?
-//                    for tmpFactorInfo in resolver.hints {
-//                      if displayName == tmpFactorInfo.displayName {
-//                        selectedHint = tmpFactorInfo as? PhoneMultiFactorInfo
-//                      }
-//                    }
-//                    PhoneAuthProvider.provider()
-//                      .verifyPhoneNumber(with: selectedHint!, uiDelegate: nil,
-//                                         multiFactorSession: resolver
-//                                           .session) { verificationID, error in
-//                        if error != nil {
-//                          print(
-//                            "Multi factor start sign in failed. Error: \(error.debugDescription)"
-//                          )
-//                        } else {
-//                          self.showTextInputPrompt(
-//                            withMessage: "Verification code for \(selectedHint?.displayName ?? "")",
-//                            completionBlock: { userPressedOK, verificationCode in
-//                              let credential: PhoneAuthCredential? = PhoneAuthProvider.provider()
-//                                .credential(withVerificationID: verificationID!,
-//                                            verificationCode: verificationCode!)
-//                              let assertion: MultiFactorAssertion? = PhoneMultiFactorGenerator
-//                                .assertion(with: credential!)
-//                              resolver.resolveSignIn(with: assertion!) { authResult, error in
-//                                if error != nil {
-//                                  print(
-//                                    "Multi factor finanlize sign in failed. Error: \(error.debugDescription)"
-//                                  )
-//                                } else {
-//                                  self.navigationController?.popViewController(animated: true)
-//                                }
-//                              }
-//                            }
-//                          )
-//                        }
-//                      }
-//                  }
-//                )
-//              } else {
-//                self.showMessagePrompt(error.localizedDescription)
-//                return
-//              }
-//              // ...
-//              return
-//            }
-//            // User is signed in
-//            // ...
-//        }
-//        }
     }
 }
 

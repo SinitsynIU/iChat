@@ -10,9 +10,9 @@ import FirebaseAuth
 
 class ListViewController: UIViewController {
     
-    let activeChats: [MChat] = []
+    let activeChats = [MChat]()
     
-    let waitingChats: [MChat] = []
+    let waitingChats = [MChat]()
     
     enum Section: Int, CaseIterable {
         case waitingChats

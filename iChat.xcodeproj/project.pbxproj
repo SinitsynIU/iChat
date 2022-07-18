@@ -49,6 +49,10 @@
 		48A2C4CF287828A70066E14D /* FirestoreServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C4CE287828A70066E14D /* FirestoreServiceManager.swift */; };
 		48A2C4D1287839DC0066E14D /* UserError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C4D0287839DC0066E14D /* UserError.swift */; };
 		48A2C4D32878575A0066E14D /* UIApplication + Extansion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C4D22878575A0066E14D /* UIApplication + Extansion.swift */; };
+		48A2C4D52882DF480066E14D /* StorageServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C4D42882DF480066E14D /* StorageServiceManager.swift */; };
+		48A2C4D72882E6BF0066E14D /* UIImage + Extansion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C4D62882E6BF0066E14D /* UIImage + Extansion.swift */; };
+		48A2C4D9288465860066E14D /* ListenerServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A2C4D8288465860066E14D /* ListenerServiceManager.swift */; };
+		48D3665428848B1B00ACD25B /* MMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D3665328848B1B00ACD25B /* MMessage.swift */; };
 		BDDDD3DEF014CE44C02A82D9 /* Pods_iChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 114586B2CBF10CDD2EB5A5CA /* Pods_iChat.framework */; };
 /* End PBXBuildFile section */
 
@@ -98,6 +102,10 @@
 		48A2C4CE287828A70066E14D /* FirestoreServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreServiceManager.swift; sourceTree = "<group>"; };
 		48A2C4D0287839DC0066E14D /* UserError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserError.swift; sourceTree = "<group>"; };
 		48A2C4D22878575A0066E14D /* UIApplication + Extansion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication + Extansion.swift"; sourceTree = "<group>"; };
+		48A2C4D42882DF480066E14D /* StorageServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageServiceManager.swift; sourceTree = "<group>"; };
+		48A2C4D62882E6BF0066E14D /* UIImage + Extansion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage + Extansion.swift"; sourceTree = "<group>"; };
+		48A2C4D8288465860066E14D /* ListenerServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenerServiceManager.swift; sourceTree = "<group>"; };
+		48D3665328848B1B00ACD25B /* MMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMessage.swift; sourceTree = "<group>"; };
 		638467E4D1C956EFE516B3D0 /* Pods-iChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iChat.release.xcconfig"; path = "Target Support Files/Pods-iChat/Pods-iChat.release.xcconfig"; sourceTree = "<group>"; };
 		FCBEAAB1AD3B1D8602FB8BB6 /* Pods-iChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iChat.debug.xcconfig"; path = "Target Support Files/Pods-iChat/Pods-iChat.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -178,6 +186,7 @@
 				48A2C49B28749FC80066E14D /* UISegmentedControl + Extansion.swift */,
 				48A2C4B82875CAEA0066E14D /* UIViewController + Extansion.swift */,
 				48A2C4BE2876F6840066E14D /* UIView + Extansion.swift */,
+				48A2C4D62882E6BF0066E14D /* UIImage + Extansion.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -211,6 +220,7 @@
 			children = (
 				48A2C4A62874BD0C0066E14D /* MChat.swift */,
 				48A2C4B42875BA0A0066E14D /* MUser.swift */,
+				48D3665328848B1B00ACD25B /* MMessage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -233,6 +243,8 @@
 				48A2C4C92877EA720066E14D /* AuthError.swift */,
 				48A2C4D0287839DC0066E14D /* UserError.swift */,
 				48A2C4CE287828A70066E14D /* FirestoreServiceManager.swift */,
+				48A2C4D42882DF480066E14D /* StorageServiceManager.swift */,
+				48A2C4D8288465860066E14D /* ListenerServiceManager.swift */,
 			);
 			path = ServiceManager;
 			sourceTree = "<group>";
@@ -378,6 +390,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48A2C4D72882E6BF0066E14D /* UIImage + Extansion.swift in Sources */,
 				48A2C49E2874A8420066E14D /* ListViewController.swift in Sources */,
 				48A2C4AF28758E620066E14D /* GradientView.swift in Sources */,
 				48A2C4C1287708230066E14D /* RequestChatViewController.swift in Sources */,
@@ -393,6 +406,7 @@
 				48A2C4AB28755BFF0066E14D /* ActiveChatCell.swift in Sources */,
 				48A2C48A287372020066E14D /* UIImageView + Extansion.swift in Sources */,
 				48A2C4A32874AAE60066E14D /* UsersViewController.swift in Sources */,
+				48A2C4D52882DF480066E14D /* StorageServiceManager.swift in Sources */,
 				48A2C470287350FD0066E14D /* AuthViewController.swift in Sources */,
 				48A2C49828744ED00066E14D /* SetupProfileViewController.swift in Sources */,
 				48A2C4BF2876F6840066E14D /* UIView + Extansion.swift in Sources */,
@@ -404,9 +418,11 @@
 				48A2C48D2873DA770066E14D /* ButtonFromView.swift in Sources */,
 				48A2C4CF287828A70066E14D /* FirestoreServiceManager.swift in Sources */,
 				48A2C48F2873E6200066E14D /* UIStackView + Extansion.swift in Sources */,
+				48D3665428848B1B00ACD25B /* MMessage.swift in Sources */,
 				48A2C46E287350FD0066E14D /* SceneDelegate.swift in Sources */,
 				48A2C4AD28755E600066E14D /* ProtocolConfigurationCell.swift in Sources */,
 				48A2C480287362B90066E14D /* UIButton + Extansion.swift in Sources */,
+				48A2C4D9288465860066E14D /* ListenerServiceManager.swift in Sources */,
 				48A2C4C82877E49A0066E14D /* Validators.swift in Sources */,
 				48A2C4B92875CAEA0066E14D /* UIViewController + Extansion.swift in Sources */,
 				48A2C4B12875967D0066E14D /* WaitingChatCell.swift in Sources */,

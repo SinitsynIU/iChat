@@ -7,10 +7,12 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseFirestore
 
 class UsersViewController: UIViewController {
     
-    let users: [MUser] = []
+    var users = [MUser]()
+    private var usersListener: ListenerRegistration?
     
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, MUser>?
@@ -34,6 +36,10 @@ class UsersViewController: UIViewController {
         title = currentUser.userName
     }
     
+    deinit {
+        usersListener?.remove()
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -45,8 +51,17 @@ class UsersViewController: UIViewController {
         setupSearchBar()
         setupCollectionView()
         setupCeateDataSource()
-        reloadData(with: nil)
         setupActions()
+        
+        usersListener = ListenerServiceManager.shared.usersObserve(users: users, completion: { (result) in
+            switch result {
+            case .success(let users):
+                self.users = users
+                self.reloadData(with: nil)
+            case .failure(let error):
+                self.showAlert(titel: "Error!", message: error.localizedDescription)
+            }
+        })
     }
 }
 
@@ -80,6 +95,16 @@ extension UsersViewController {
     }
 }
 
+// MARK: - UICollectionViewDelegate
+extension UsersViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let user = self.dataSource?.itemIdentifier(for: indexPath) else { return }
+        let profileVC = ProfileViewController(user: user)
+        present(profileVC, animated: true, completion: nil)
+    }
+}
+
 // MARK: - SetupCollectionView
 extension UsersViewController {
     
@@ -93,6 +118,7 @@ extension UsersViewController {
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
         
         collectionView.register(UserCell.self, forCellWithReuseIdentifier: UserCell.reuseId)
+        collectionView.delegate = self
     }
     
     private func reloadData(with searchText: String?) {

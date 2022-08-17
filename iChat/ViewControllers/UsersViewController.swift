@@ -15,7 +15,7 @@ class UsersViewController: UIViewController {
     private var usersListener: ListenerRegistration?
     
     var collectionView: UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Section, MUser>?
+    var dataSource: UICollectionViewDiffableDataSource<Section, MUser>!
     
     enum Section: Int, CaseIterable {
         case users

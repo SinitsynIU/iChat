@@ -28,12 +28,12 @@ struct MUser: Hashable, Decodable {
     init?(document: DocumentSnapshot) {
         guard let data = document.data() else { return nil }
         
-        guard let userName = data["userName"] as? String else { return nil }
-        guard let uid = data["uid"] as? String else { return nil }
-        guard let sex = data["sex"] as? String else { return nil }
-        guard let email = data["email"] as? String else { return nil }
-        guard let image = data["userImage"] as? String else { return nil }
-        guard let description = data["description"] as? String else { return nil }
+        guard let userName = data["userName"] as? String,
+        let uid = data["uid"] as? String,
+        let sex = data["sex"] as? String,
+        let email = data["email"] as? String,
+        let image = data["userImage"] as? String,
+        let description = data["description"] as? String else { return nil }
         
         self.uid = uid
         self.email = email
@@ -46,12 +46,12 @@ struct MUser: Hashable, Decodable {
     init?(document: QueryDocumentSnapshot) {
         let data = document.data()
         
-        guard let userName = data["userName"] as? String else { return nil }
-        guard let uid = data["uid"] as? String else { return nil }
-        guard let sex = data["sex"] as? String else { return nil }
-        guard let email = data["email"] as? String else { return nil }
-        guard let image = data["userImage"] as? String else { return nil }
-        guard let description = data["description"] as? String else { return nil }
+        guard let userName = data["userName"] as? String,
+        let uid = data["uid"] as? String,
+        let sex = data["sex"] as? String,
+        let email = data["email"] as? String,
+        let image = data["userImage"] as? String,
+        let description = data["description"] as? String else { return nil }
         
         self.uid = uid
         self.email = email

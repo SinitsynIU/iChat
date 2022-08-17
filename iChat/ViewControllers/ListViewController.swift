@@ -7,12 +7,15 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseFirestore
 
 class ListViewController: UIViewController {
     
-    let activeChats = [MChat]()
+    var activeChats = [MChat]()
+    var waitingChats = [MChat]()
     
-    let waitingChats = [MChat]()
+    private var waitingChatsListener: ListenerRegistration?
+    private var activeChatsListener: ListenerRegistration?
     
     enum Section: Int, CaseIterable {
         case waitingChats
@@ -43,15 +46,45 @@ class ListViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        waitingChatsListener?.remove()
+        activeChatsListener?.remove()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
         setupSearchBar()
         setupCollectionView()
-        setupCeateDataSource()
-        reloadData(with: nil)
-        setupActions() 
+        ceateDataSource()
+        reloadData()
+        setupActions()
+        
+        waitingChatsListener = ListenerServiceManager.shared.waitingChatsObserve(chats: waitingChats, completion: { (result) in
+            switch result {
+            case .success(let chats):
+                if self.waitingChats != [], self.waitingChats.count <= chats.count {
+                    let requestChatVC = RequestChatViewController(chat: chats.last!)
+                    requestChatVC.delegate = self
+                    self.present(requestChatVC, animated: true, completion: nil)
+                }
+                self.waitingChats = chats
+                self.reloadData()
+            case .failure(let error):
+                self.showAlert(titel: "Error!", message: error.localizedDescription)
+            }
+        })
+        
+        activeChatsListener = ListenerServiceManager.shared.activeChatsObserve(chats: activeChats, completion: { (result) in
+            switch result {
+            case .success(let chats):
+                self.activeChats = chats
+                self.reloadData()
+            case .failure(let error):
+                self.showAlert(titel: "Error!", message: error.localizedDescription)
+            }
+        })
     }
 }
 
@@ -77,6 +110,51 @@ extension ListViewController {
     }
 }
 
+// MARK: - UICollectionViewDelegate
+extension ListViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let chat = self.dataSource?.itemIdentifier(for: indexPath) else { return }
+        guard let section = Section(rawValue: indexPath.section) else { return }
+        
+        switch section {
+        case .waitingChats:
+            let requestChatVC = RequestChatViewController(chat: chat)
+            requestChatVC.delegate = self
+            self.present(requestChatVC, animated: true, completion: nil)
+        case .activeChats:
+            let chatVC = ChatsViewController(user: currentUser, chat: chat)
+            navigationController?.pushViewController(chatVC, animated: true)
+        }
+    }
+}
+
+// MARK: - ProtocolWaitingChatsNavigation
+extension ListViewController: ProtocolWaitingChatsNavigation {
+    
+    func removeWaitingChat(chat: MChat) {
+        FirestoreServiceManager.shared.deleteWaitingChat(chat: chat, completion: { (result) in
+            switch result {
+            case .success:
+                self.showAlert(titel: "Success!", message: "Chat with \(chat.friendUserName) was removed.")
+            case .failure(let error):
+                self.showAlert(titel: "Error!", message: error.localizedDescription)
+            }
+        })
+    }
+    
+    func chatToActive(chat: MChat) {
+        FirestoreServiceManager.shared.changeToActive(chat: chat) { (result) in
+            switch result {
+            case .success:
+                self.showAlert(titel: "Success!", message: "Pleasant communication with \(chat.friendUserName).")
+            case .failure(let error):
+                self.showAlert(titel: "Error!", message: error.localizedDescription)
+            }
+        }
+    }
+}
+
 // MARK: - SetupUI
 extension ListViewController {
     
@@ -99,18 +177,16 @@ extension ListViewController {
         
         collectionView.register(ActiveChatCell.self, forCellWithReuseIdentifier: ActiveChatCell.reuseId)
         collectionView.register(WaitingChatCell.self, forCellWithReuseIdentifier: WaitingChatCell.reuseId)
+        
+        collectionView.delegate = self
     }
     
-    private func reloadData(with searchText: String?) {
-        let filtered = activeChats.filter { (user) -> Bool in
-            user.contains(filter: searchText)
-        }
-        
+    private func reloadData() {
         var snapshot = NSDiffableDataSourceSnapshot<Section, MChat>()
         
         snapshot.appendSections([.waitingChats, .activeChats])
         snapshot.appendItems(waitingChats, toSection: .waitingChats)
-        snapshot.appendItems(filtered, toSection: .activeChats)
+        snapshot.appendItems(activeChats, toSection: .activeChats)
         
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
@@ -119,7 +195,7 @@ extension ListViewController {
 // MARK: - SetupCollectionViewDataSource
 extension ListViewController {
     
-    private func setupCeateDataSource() {
+    private func ceateDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             guard let section = Section(rawValue: indexPath.section) else { fatalError("Unknown section kind") }
             
@@ -232,12 +308,12 @@ extension ListViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        reloadData(with: searchText)
+        reloadData()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = nil
-        reloadData(with: nil)
+        reloadData()
     }
 }
 

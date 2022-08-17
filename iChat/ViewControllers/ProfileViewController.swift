@@ -37,6 +37,7 @@ class ProfileViewController: UIViewController {
         
         setupUI()
         setupConstraints()
+        setupActions()
     }
 }
 
@@ -48,15 +49,21 @@ extension ProfileViewController {
         aboutMeLabel.numberOfLines = 0
         containerView.backgroundColor = .myWhite
         containerView.layer.cornerRadius = 30
-        
+    }
+}
+
+// MARK: - SetupActions
+extension ProfileViewController {
+    
+    private func setupActions() {
         if let button = myTextField.rightView as? UIButton {
             button.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
         }
     }
-    
+        
     @objc private func sendMessage() {
         guard let message = myTextField.text, message != "" else { return }
-        
+            
         self.dismiss(animated: true) {
             FirestoreServiceManager.shared.createWaitingChat(message: message, receiver: self.user) { (result) in
                 switch result {

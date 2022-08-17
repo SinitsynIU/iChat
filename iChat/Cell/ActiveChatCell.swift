@@ -33,16 +33,11 @@ class ActiveChatCell: UICollectionViewCell, ProtocolConfigurationCell {
 extension ActiveChatCell {
     
     func configurationCell<U>(with value: U) where U : Hashable {
-        guard let user: MChat = value as? MChat else { return }
-        
-//        if user.userImage == "" {
-//            imageView.image = UIImage(named: "avatar")
-//        } else {
-//            imageView.image = UIImage(named: user.userImage)
-//        }
-//        
-//        nameLabel.text = user.userName
-//        messageLabel.text = user.message
+        guard let chat: MChat = value as? MChat else { return }
+  
+        nameLabel.text = chat.friendUserName
+        messageLabel.text = chat.messageContent
+        imageView.sd_setImage(with: URL(string: chat.friendUserImage), completed: nil)
     }
 }
 

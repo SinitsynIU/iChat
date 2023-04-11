@@ -12,7 +12,7 @@ import FirebaseAuth
 
 class AuthViewController: UIViewController {
     
-    let logoImageView = UIImageView(image: #imageLiteral(resourceName: "Logo"), contentMode: .scaleAspectFit)
+    let logoImageView = UIImageView(image: UIImage(named: "logo"), contentMode: .scaleAspectFit)
     
     let googleLabel = UILabel(text: "Get started with")
     let emailLabel = UILabel(text: "Or sign up with")
@@ -58,26 +58,24 @@ extension AuthViewController {
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
         
         let config = GIDConfiguration(clientID: clientID)
+        GIDSignIn.sharedInstance.configuration = config
 
-        GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
+        GIDSignIn.sharedInstance.signIn(withPresenting: self) { [weak self] result, error in
+            guard let self else { return }
 
-            AuthServiceManager.shered.googleLogin(user: user, error: error) { (result) in
+            AuthServiceManager.shered.googleLogin(user: result?.user, error: error) { (result) in
                 switch result {
                 case .success(let user):
                     FirestoreServiceManager.shared.getUserData(user: user) { (result) in
                         switch result {
                         case .success(let muser):
-                            UIApplication.getTopViewController()?.showAlert(titel: "Success", message: "You are registered.") {
-                                let mainTabBar = MainTabBarController(currentUser: muser)
-                                mainTabBar.modalPresentationStyle = .fullScreen
-                                self.present(mainTabBar, animated: true, completion: nil)
-                            }
+                            let mainTabBar = MainTabBarController(currentUser: muser)
+                            mainTabBar.modalPresentationStyle = .fullScreen
+                            self.present(mainTabBar, animated: true, completion: nil)
                         case .failure(_):
-                            UIApplication.getTopViewController()?.showAlert(titel: "Success", message: "You are registered.") {
-                                let setupProfile = SetupProfileViewController(currentUser: user)
-                                setupProfile.modalPresentationStyle = .fullScreen
-                                self.present(setupProfile, animated: true, completion: nil)
-                            }
+                            let setupProfile = SetupProfileViewController(currentUser: user)
+                            setupProfile.modalPresentationStyle = .fullScreen
+                            self.present(setupProfile, animated: true, completion: nil)
                         }
                     }
                 case .failure(let error):

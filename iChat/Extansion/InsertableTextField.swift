@@ -28,7 +28,7 @@ class InsertableTextField: UITextField {
         self.leftViewMode = .always
         
         let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "Sent"), for: .normal)
+        button.setImage(UIImage(named: "sent"), for: .normal)
         button.applyGradients(cornerRadius: 10)
         self.rightView = button
         self.rightView?.frame = CGRect(x: 0, y: 0, width: 19, height: 19)

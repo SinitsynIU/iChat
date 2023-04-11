@@ -11,10 +11,10 @@ import SDWebImage
 class ProfileViewController: UIViewController {
     
     let containerView = UIView()
-    let imageView = UIImageView(image: #imageLiteral(resourceName: "avatar"), contentMode: .scaleAspectFill)
+    let imageView = UIImageView(image: UIImage(named: "avatar"), contentMode: .scaleAspectFill)
     
-    let nameLabel = UILabel(text: "Ilya", font: .systemFont(ofSize: 20, weight: .light))
-    let aboutMeLabel = UILabel(text: "You have the opportunity to chat with the best men!", font: .systemFont(ofSize: 16, weight: .light))
+    let nameLabel = UILabel(text: "", font: .systemFont(ofSize: 20, weight: .light))
+    let aboutMeLabel = UILabel(text: "", font: .systemFont(ofSize: 16, weight: .light))
     
     let myTextField = InsertableTextField()
     
@@ -38,6 +38,24 @@ class ProfileViewController: UIViewController {
         setupUI()
         setupConstraints()
         setupActions()
+        subscribeToKeyboardShowHideProfileViewController()
+        dismissKey()
+    }
+    
+    deinit {
+        unsubscribeToKeyboardShowHide()
+    }
+    
+    func subscribeToKeyboardShowHideProfileViewController() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShowProfileViewController), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func keyboardWillShowProfileViewController(notification: Notification) {
+        let info = notification.userInfo!
+        let keyboardFrame: CGRect = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        
+        self.view.frame.origin.y = -keyboardFrame.size.height / 1.2
     }
 }
 

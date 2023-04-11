@@ -32,7 +32,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } else {
             window?.rootViewController = AuthViewController()
         }
-
+        window?.overrideUserInterfaceStyle = .light
         window?.makeKeyAndVisible()
     }
 

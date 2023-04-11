@@ -52,11 +52,4 @@ struct MChat: Hashable, Decodable {
     static func == (lhs: MChat, rhs: MChat) -> Bool {
         return lhs.friendId == rhs.friendId
     }
-    
-//    func contains(filter: String?) -> Bool {
-//        guard let filter = filter else { return true }
-//        if filter.isEmpty { return true }
-//        let lowercasedFilter = filter.lowercased()
-//        return friendUserName.lowercased().contains(lowercasedFilter)
-//    }
 }

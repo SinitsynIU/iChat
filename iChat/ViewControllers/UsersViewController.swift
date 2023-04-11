@@ -36,10 +36,6 @@ class UsersViewController: UIViewController {
         title = currentUser.userName
     }
     
-    deinit {
-        usersListener?.remove()
-    }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -58,10 +54,19 @@ class UsersViewController: UIViewController {
             case .success(let users):
                 self.users = users
                 self.reloadData(with: nil)
+                self.collectionView.reloadData()
             case .failure(let error):
                 self.showAlert(titel: "Error!", message: error.localizedDescription)
             }
         })
+        
+        subscribeToKeyboardShowHide()
+        dismissKey()
+    }
+    
+    deinit {
+        usersListener?.remove()
+        unsubscribeToKeyboardShowHide()
     }
 }
 
@@ -91,7 +96,7 @@ extension UsersViewController {
 extension UsersViewController {
     
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .myWhite
     }
 }
 

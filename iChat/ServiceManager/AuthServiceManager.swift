@@ -64,10 +64,10 @@ class AuthServiceManager {
             return
         }
         
-        guard let auth = user?.authentication, let idToken = auth.idToken else { return }
-
+        guard let user = user, let idToken = user.idToken?.tokenString else { return }
+        
         let credential = GoogleAuthProvider.credential(withIDToken: idToken,
-                                                       accessToken: auth.accessToken)
+                                                       accessToken: user.accessToken.tokenString)
         Auth.auth().signIn(with: credential) { (result, error) in
             guard let result = result else {
                 completion(.failure(error!))

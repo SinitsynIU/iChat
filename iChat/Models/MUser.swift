@@ -27,14 +27,14 @@ struct MUser: Hashable, Decodable {
     
     init?(document: DocumentSnapshot) {
         guard let data = document.data() else { return nil }
-        
+
         guard let userName = data["userName"] as? String,
         let uid = data["uid"] as? String,
         let sex = data["sex"] as? String,
         let email = data["email"] as? String,
         let image = data["userImage"] as? String,
         let description = data["description"] as? String else { return nil }
-        
+
         self.uid = uid
         self.email = email
         self.userName = userName
@@ -43,23 +43,23 @@ struct MUser: Hashable, Decodable {
         self.description = description
     }
     
-    init?(document: QueryDocumentSnapshot) {
-        let data = document.data()
-        
-        guard let userName = data["userName"] as? String,
-        let uid = data["uid"] as? String,
-        let sex = data["sex"] as? String,
-        let email = data["email"] as? String,
-        let image = data["userImage"] as? String,
-        let description = data["description"] as? String else { return nil }
-        
-        self.uid = uid
-        self.email = email
-        self.userName = userName
-        self.sex = sex
-        self.userImage = image
-        self.description = description
-    }
+//    init?(document: QueryDocumentSnapshot) {
+//        let data = document.data()
+//
+//        guard let userName = data["userName"] as? String,
+//        let uid = data["uid"] as? String,
+//        let sex = data["sex"] as? String,
+//        let email = data["email"] as? String,
+//        let image = data["userImage"] as? String,
+//        let description = data["description"] as? String else { return nil }
+//
+//        self.uid = uid
+//        self.email = email
+//        self.userName = userName
+//        self.sex = sex
+//        self.userImage = image
+//        self.description = description
+//    }
     
     var representation: [String: Any] {
         var representation = ["userName": userName]

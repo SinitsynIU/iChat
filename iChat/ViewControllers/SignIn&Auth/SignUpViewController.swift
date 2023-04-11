@@ -19,7 +19,7 @@ class SignUpViewController: UIViewController {
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Login", for: .normal)
-        button.setTitleColor(.myRed, for: .normal)
+        button.setTitleColor(.myBlack, for: .normal)
         button.titleLabel?.font = .myAvenir20
         return button
     }()
@@ -36,6 +36,12 @@ class SignUpViewController: UIViewController {
         setupUI()
         setupConstraints()
         setupActions()
+        subscribeToKeyboardShowHide()
+        dismissKey()
+    }
+    
+    deinit {
+        unsubscribeToKeyboardShowHide()
     }
 }
 
@@ -48,14 +54,13 @@ extension SignUpViewController {
     }
     
     @objc private func signUpButtonActions() {
-        AuthServiceManager.shered.register(email: emailTextField.text, password: passwordTextField.text, confirmPassword: confirmPasswordTextField.text) { (result) in
+        AuthServiceManager.shered.register(email: emailTextField.text, password: passwordTextField.text, confirmPassword: confirmPasswordTextField.text) { [weak self] result in
+            guard let self else { return }
             switch result {
             case .success(let user):
-                self.showAlert(titel: "Success", message: "You are registered.") {
-                    let setupProfile = SetupProfileViewController(currentUser: user)
-                    setupProfile.modalPresentationStyle = .fullScreen
-                    self.present(setupProfile, animated: true, completion: nil)
-                }
+                let setupProfile = SetupProfileViewController(currentUser: user)
+                setupProfile.modalPresentationStyle = .fullScreen
+                self.present(setupProfile, animated: true, completion: nil)
             case .failure(let error):
                 self.showAlert(titel: "Error", message: error.localizedDescription)
             }
@@ -87,7 +92,7 @@ extension SignUpViewController {
         
         signUpButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        let stackView = UIStackView(arrangedSubviews: [emailStackView, passwordStackView, confirmPasswordStackView, signUpButton], axis: .vertical, spacing: 40)
+        let stackView = UIStackView(arrangedSubviews: [emailStackView, passwordStackView, confirmPasswordStackView, signUpButton], axis: .vertical, spacing: 35)
         let alreadyOnboardStackView = UIStackView(arrangedSubviews: [alreadyOnboardLabel, loginButton], axis: .vertical, spacing: 0)
         
         welcomLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -97,12 +102,12 @@ extension SignUpViewController {
         [welcomLabel, stackView, alreadyOnboardStackView].forEach({view.addSubview($0)})
         
         NSLayoutConstraint.activate([
-            welcomLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
+            welcomLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 140),
             welcomLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: welcomLabel.bottomAnchor, constant: 120),
+            stackView.topAnchor.constraint(equalTo: welcomLabel.bottomAnchor, constant: 110),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -40)
         ])

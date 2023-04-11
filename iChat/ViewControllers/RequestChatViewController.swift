@@ -10,10 +10,10 @@ import UIKit
 class RequestChatViewController: UIViewController {
     
     let containerView = UIView()
-    let imageView = UIImageView(image: #imageLiteral(resourceName: "avatar"), contentMode: .scaleAspectFill)
+    let imageView = UIImageView(image: UIImage(named: "avatar"), contentMode: .scaleAspectFill)
     
-    let nameLabel = UILabel(text: "Ilya", font: .systemFont(ofSize: 20, weight: .light))
-    let aboutMeLabel = UILabel(text: "You have the opportunity to start a new chat!", font: .systemFont(ofSize: 16, weight: .light))
+    let nameLabel = UILabel(text: "", font: .systemFont(ofSize: 20, weight: .light))
+    let aboutMeLabel = UILabel(text: "", font: .systemFont(ofSize: 16, weight: .light))
     
     let acceptButton = UIButton(title: "ACCEPT", titleColor: .white, font: .laoSangamMN20, backgroundColor: .black, isShadow: false, cornerRadius: 10)
     let denyButton = UIButton(title: "DENY", titleColor: .myLightRed, font: .laoSangamMN20, backgroundColor: .myWhite, isShadow: false, cornerRadius: 10)

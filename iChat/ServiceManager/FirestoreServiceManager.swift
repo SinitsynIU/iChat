@@ -7,6 +7,7 @@
 
 import Firebase
 import FirebaseFirestore
+import FirebaseAuth
 import UIKit
 
 class FirestoreServiceManager {
@@ -15,7 +16,7 @@ class FirestoreServiceManager {
     
     let db = Firestore.firestore()
     
-    private var userRef: CollectionReference {
+    private var usersRef: CollectionReference {
         return db.collection("users")
     }
     
@@ -30,13 +31,14 @@ class FirestoreServiceManager {
     var currentUser: MUser!
     
     func getUserData(user: User, completion: @escaping (Result<MUser, Error>) -> Void) {
-        let docRef = userRef.document(user.uid)
-        docRef.getDocument { (document, error) in
-            if let document = document, document.exists {
+        let docRef = usersRef.document(user.uid)
+        docRef.getDocument { documentSnapshot, error in
+            if let document = documentSnapshot, document.exists {
                 guard let muser = MUser(document: document) else {
                     completion(.failure(UserError.cannotUnwrapToMUser))
                     return
                 }
+                
                 self.currentUser = muser
                 completion(.success(muser))
             } else {
@@ -51,7 +53,7 @@ class FirestoreServiceManager {
             return
         }
         
-        guard userImage != #imageLiteral(resourceName: "avatar") else {
+        guard userImage != UIImage(named: "avatar") else {
             completion(.failure(UserError.imageNotExist))
             return
         }
@@ -62,7 +64,7 @@ class FirestoreServiceManager {
             switch result {
             case .success(let url):
                 muser.userImage = url.absoluteString
-                self.userRef.document(muser.uid).setData(muser.representation) { (error) in
+                self.usersRef.document(muser.uid).setData(muser.representation) { (error) in
                     if let error = error {
                         completion(.failure(error))
                     } else {
@@ -77,7 +79,7 @@ class FirestoreServiceManager {
     
     func createWaitingChat(message: String, receiver: MUser, completion: @escaping (Result<Void, Error>) -> Void) {
         let reference = db.collection(["users", receiver.uid, "waitingChats"].joined(separator: "/"))
-        let messageRef = reference.document(self.currentUser.uid).collection("messages")
+        let messageRef = reference.document(currentUser.uid).collection("messages")
         
         let massage = MMessage(user: currentUser, content: message)
         let chat = MChat(friendUserName: currentUser.userName, friendUserImage: currentUser.userImage, friendId: currentUser.uid, messageContent: massage.content)
@@ -180,6 +182,34 @@ class FirestoreServiceManager {
             }
             for message in messages {
                 messageRef.addDocument(data: message.representation) { (error) in
+                    if let error = error {
+                        completion(.failure(error))
+                        return
+                    }
+                    completion(.success(Void()))
+                }
+            }
+        }
+    }
+    
+    func sendMessage(chat: MChat, message: MMessage, completion: @escaping (Result<Void, Error>) -> Void) {
+        let friendRef = usersRef.document(chat.friendId).collection("activeChats").document(currentUser.uid)
+        let friendMessageRef = friendRef.collection("messages")
+        let userMessageRef = usersRef.document(currentUser.uid).collection("activeChats").document(chat.friendId).collection("messages")
+        
+        let chatForFriend = MChat(friendUserName: currentUser.userName, friendUserImage: currentUser.userImage, friendId: currentUser.uid, messageContent: currentUser.description)
+        
+        friendRef.setData(chatForFriend.representation) { error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            friendMessageRef.addDocument(data: message.representation) { error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                userMessageRef.addDocument(data: message.representation) { error in
                     if let error = error {
                         completion(.failure(error))
                         return

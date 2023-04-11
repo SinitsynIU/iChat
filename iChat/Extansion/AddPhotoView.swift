@@ -11,7 +11,7 @@ class AddPhotoView: UIView {
     
     let avatarImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = #imageLiteral(resourceName: "avatar")
+        imageView.image = UIImage(named: "avatar")
         imageView.clipsToBounds = true
         imageView.layer.borderColor = UIColor.black.cgColor
         imageView.layer.borderWidth = 1
@@ -21,7 +21,7 @@ class AddPhotoView: UIView {
     
     let button: UIButton = {
         let button = UIButton(type: .system)
-        let image = #imageLiteral(resourceName: "plus")
+        let image = UIImage(named: "plus")
         button.setImage(image, for: .normal)
         button.tintColor = .myBlack
         return button

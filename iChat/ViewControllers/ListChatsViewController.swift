@@ -1,5 +1,5 @@
 //
-//  ListViewController.swift
+//  ListChatsViewController.swift
 //  iChat
 //
 //  Created by Илья Синицын on 05.07.2022.
@@ -9,7 +9,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
-class ListViewController: UIViewController {
+class ListChatsViewController: UIViewController {
     
     var activeChats = [MChat]()
     var waitingChats = [MChat]()
@@ -46,11 +46,6 @@ class ListViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        waitingChatsListener?.remove()
-        activeChatsListener?.remove()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -61,7 +56,8 @@ class ListViewController: UIViewController {
         reloadData()
         setupActions()
         
-        waitingChatsListener = ListenerServiceManager.shared.waitingChatsObserve(chats: waitingChats, completion: { (result) in
+        waitingChatsListener = ListenerServiceManager.shared.waitingChatsObserve(chats: waitingChats, completion: { [weak self] result in
+            guard let self else { return }
             switch result {
             case .success(let chats):
                 if self.waitingChats != [], self.waitingChats.count <= chats.count {
@@ -71,25 +67,37 @@ class ListViewController: UIViewController {
                 }
                 self.waitingChats = chats
                 self.reloadData()
+                self.collectionView.reloadData()
             case .failure(let error):
                 self.showAlert(titel: "Error!", message: error.localizedDescription)
             }
         })
         
-        activeChatsListener = ListenerServiceManager.shared.activeChatsObserve(chats: activeChats, completion: { (result) in
+        activeChatsListener = ListenerServiceManager.shared.activeChatsObserve(chats: activeChats, completion: { [weak self] (result) in
+            guard let self else { return }
             switch result {
             case .success(let chats):
                 self.activeChats = chats
                 self.reloadData()
+                self.collectionView.reloadData()
             case .failure(let error):
                 self.showAlert(titel: "Error!", message: error.localizedDescription)
             }
         })
+        
+        subscribeToKeyboardShowHide()
+        dismissKey()
+    }
+    
+    deinit {
+        waitingChatsListener?.remove()
+        activeChatsListener?.remove()
+        unsubscribeToKeyboardShowHide()
     }
 }
 
 // MARK: - SetupActions
-extension ListViewController {
+extension ListChatsViewController {
     
     private func setupActions() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(signOutButtonAction))
@@ -111,7 +119,7 @@ extension ListViewController {
 }
 
 // MARK: - UICollectionViewDelegate
-extension ListViewController: UICollectionViewDelegate {
+extension ListChatsViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let chat = self.dataSource?.itemIdentifier(for: indexPath) else { return }
@@ -130,13 +138,14 @@ extension ListViewController: UICollectionViewDelegate {
 }
 
 // MARK: - ProtocolWaitingChatsNavigation
-extension ListViewController: ProtocolWaitingChatsNavigation {
+extension ListChatsViewController: ProtocolWaitingChatsNavigation {
     
     func removeWaitingChat(chat: MChat) {
-        FirestoreServiceManager.shared.deleteWaitingChat(chat: chat, completion: { (result) in
+        FirestoreServiceManager.shared.deleteWaitingChat(chat: chat, completion: { [weak self] (result) in
+            guard let self else { return }
             switch result {
             case .success:
-                self.showAlert(titel: "Success!", message: "Chat with \(chat.friendUserName) was removed.")
+                print("Success! Chat with \(chat.friendUserName) was removed.")
             case .failure(let error):
                 self.showAlert(titel: "Error!", message: error.localizedDescription)
             }
@@ -144,10 +153,11 @@ extension ListViewController: ProtocolWaitingChatsNavigation {
     }
     
     func chatToActive(chat: MChat) {
-        FirestoreServiceManager.shared.changeToActive(chat: chat) { (result) in
+        FirestoreServiceManager.shared.changeToActive(chat: chat) { [weak self] (result) in
+            guard let self else { return }
             switch result {
             case .success:
-                self.showAlert(titel: "Success!", message: "Pleasant communication with \(chat.friendUserName).")
+                print("Success! Pleasant communication with \(chat.friendUserName).")
             case .failure(let error):
                 self.showAlert(titel: "Error!", message: error.localizedDescription)
             }
@@ -156,7 +166,7 @@ extension ListViewController: ProtocolWaitingChatsNavigation {
 }
 
 // MARK: - SetupUI
-extension ListViewController {
+extension ListChatsViewController {
     
     private func setupUI() {
         view.backgroundColor = .white
@@ -164,7 +174,7 @@ extension ListViewController {
 }
 
 // MARK: - SetupCollectionView
-extension ListViewController {
+extension ListChatsViewController {
     
     private func setupCollectionView() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCompositionalLayout())
@@ -193,10 +203,11 @@ extension ListViewController {
 }
 
 // MARK: - SetupCollectionViewDataSource
-extension ListViewController {
+extension ListChatsViewController {
     
     private func ceateDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+        dataSource = UICollectionViewDiffableDataSource<Section, MChat>(collectionView: collectionView, cellProvider: { [weak self] collectionView, indexPath, itemIdentifier in
+            guard let self else { return UICollectionViewCell() }
             guard let section = Section(rawValue: indexPath.section) else { fatalError("Unknown section kind") }
             
             switch section {
@@ -208,7 +219,8 @@ extension ListViewController {
         })
         
         dataSource?.supplementaryViewProvider = {
-            collectionView, kind, indexPath in
+            [weak self] collectionView, kind, indexPath in
+            guard let self else { return UICollectionReusableView() }
             guard let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SectionHeader.reuseId, for: indexPath) as? SectionHeader else { fatalError("Can not create new section header") }
             guard let section = Section(rawValue: indexPath.section) else { fatalError("Unknown section kind") }
                     
@@ -220,7 +232,7 @@ extension ListViewController {
 }
 
 // MARK: - SetupCollectionViewLayout
-extension ListViewController {
+extension ListChatsViewController {
     
     private func createCompositionalLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (senctionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
@@ -291,7 +303,7 @@ extension ListViewController {
 }
 
 // MARK: - SetupSearchBar & UISearchBarDelegate
-extension ListViewController: UISearchBarDelegate {
+extension ListChatsViewController: UISearchBarDelegate {
     
     private func setupSearchBar() {
         navigationController?.navigationBar.barTintColor = .myWhite

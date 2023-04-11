@@ -49,6 +49,12 @@ class SetupProfileViewController: UIViewController {
         setupUI()
         setupConstraints()
         setupActions()
+        subscribeToKeyboardShowHide()
+        dismissKey()
+    }
+    
+    deinit {
+        unsubscribeToKeyboardShowHide()
     }
 }
 
@@ -64,11 +70,9 @@ extension SetupProfileViewController {
         FirestoreServiceManager.shared.saveProfile(uid: currentUser.uid, email: currentUser.email!, userName: fullNameTextField.text, userImage: imageView.avatarImageView.image, description: aboutMeTextField.text, sex: sexSegmentedControl.titleForSegment(at: sexSegmentedControl.selectedSegmentIndex)) { (result) in
             switch result {
             case .success(let muser):
-                self.showAlert(titel: "Success", message: "Pleasant communication!") {
-                    let mainTabBar = MainTabBarController(currentUser: muser)
-                    mainTabBar.modalPresentationStyle = .fullScreen
-                    self.present(mainTabBar, animated: true, completion: nil)
-                }
+                let mainTabBar = MainTabBarController(currentUser: muser)
+                mainTabBar.modalPresentationStyle = .fullScreen
+                self.present(mainTabBar, animated: true, completion: nil)
             case .failure(let error):
                 self.showAlert(titel: "Error", message: error.localizedDescription)
             }
@@ -103,7 +107,7 @@ extension SetupProfileViewController {
         
         goToChatsButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        let stackView = UIStackView(arrangedSubviews: [fullNameStackView, aboutMeStackView, sexStackView, goToChatsButton], axis: .vertical, spacing: 40)
+        let stackView = UIStackView(arrangedSubviews: [fullNameStackView, aboutMeStackView, sexStackView, goToChatsButton], axis: .vertical, spacing: 30)
         
         welcomLabel.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -112,17 +116,17 @@ extension SetupProfileViewController {
         [welcomLabel, imageView, stackView].forEach({view.addSubview($0)})
         
         NSLayoutConstraint.activate([
-            welcomLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 160),
+            welcomLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 170),
             welcomLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: welcomLabel.bottomAnchor, constant: 40),
+            imageView.topAnchor.constraint(equalTo: welcomLabel.bottomAnchor, constant: 30),
             imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 40),
+            stackView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -40)
         ])
@@ -135,6 +139,7 @@ extension SetupProfileViewController: UIImagePickerControllerDelegate, UINavigat
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         picker.dismiss(animated: true)
+        
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
         imageView.avatarImageView.image = image
     }

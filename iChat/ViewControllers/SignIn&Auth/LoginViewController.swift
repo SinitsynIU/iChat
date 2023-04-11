@@ -39,7 +39,13 @@ class LoginViewController: UIViewController {
         
         setupUI()
         setupConstraints()
-        setupActions() 
+        setupActions()
+        subscribeToKeyboardShowHide()
+        dismissKey()
+    }
+    
+    deinit {
+        unsubscribeToKeyboardShowHide()
     }
 }
 
@@ -56,10 +62,11 @@ extension LoginViewController {
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
         
         let config = GIDConfiguration(clientID: clientID)
+        GIDSignIn.sharedInstance.configuration = config
+        
+        GIDSignIn.sharedInstance.signIn(withPresenting: self) { [unowned self] result, error in
 
-        GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [unowned self] user, error in
-
-            AuthServiceManager.shered.googleLogin(user: user, error: error) { (result) in
+            AuthServiceManager.shered.googleLogin(user: result?.user, error: error) { (result) in
                 switch result {
                 case .success(let user):
                     FirestoreServiceManager.shared.getUserData(user: user) { (result) in
@@ -135,7 +142,7 @@ extension LoginViewController {
         
         loginButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        let stackView = UIStackView(arrangedSubviews: [emailStackView, passwordStackView, loginButton], axis: .vertical, spacing: 40)
+        let stackView = UIStackView(arrangedSubviews: [emailStackView, passwordStackView, loginButton], axis: .vertical, spacing: 35)
         let needAnAccountStackView = UIStackView(arrangedSubviews: [needAnAccountLabel, signUpButton], axis: .vertical, spacing: 0)
         
         welcomLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -147,12 +154,12 @@ extension LoginViewController {
         [welcomLabel, loginView, orLabel, stackView, needAnAccountStackView].forEach({view.addSubview($0)})
         
         NSLayoutConstraint.activate([
-            welcomLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
+            welcomLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 140),
             welcomLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            loginView.topAnchor.constraint(equalTo: welcomLabel.bottomAnchor, constant: 50),
+            loginView.topAnchor.constraint(equalTo: welcomLabel.bottomAnchor, constant: 40),
             loginView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             loginView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -40)
         ])
